@@ -1,0 +1,28 @@
+[
+    {
+        "_id": 33,
+        "name":"Tan Ah Kow",
+        "swimming_grade":"silver",
+        "parent": {
+            "name":"Tan Ah Mei",
+            "_id": 9999
+        }
+    },
+    {
+        "_id": 34,
+        "name":"Jon Snow",
+        "swimming_grade":"gold",
+        "parent": {
+            "name":"Jon Wick",
+            "_id": 10001
+        }
+    },
+    {
+        "_id": 35,
+        "name":"Tan Ah Xiong",
+        "parent": {
+            "name":"Tan Ah Mei",
+            "_id": 9999
+        }
+    }
+]

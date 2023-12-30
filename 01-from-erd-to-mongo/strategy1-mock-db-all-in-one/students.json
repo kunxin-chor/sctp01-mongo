@@ -1,0 +1,49 @@
+[
+    {
+        "_id": 1,
+        "name":"Tan Ah Kow",
+        "dob":"22/12/2022",
+        "swimming_grade":"Bronze",
+        "parent":{
+            "_id":999,
+            "phone_number":"12345",
+            "name":"Tan Ah Mew",
+            "email":"ahmew@gemail.com",
+            "payments": [
+                {
+                    "_id":"8888",
+                    "type":"cc",
+                    "amount":99,
+                    "date":"11/11/2023",
+                    "session":{
+                        "address":"Yishun Ring Road",
+                        "name":"Yishun Swimming Complex",
+                        "size":"Olympic",
+                        "opening_hours":"7am to 10pm",
+                        "coach":{
+                            "name":"Vincent Ong",
+                            "certifcation":"Life Saving Level 2"
+                        }
+                    }
+                },
+                {
+                    "_id":"8889",
+                    "type":"cc",
+                    "amount":99,
+                    "date":"11/12/2023",
+                    "session":{
+                        "address":"Yishun Ring Road",
+                        "name":"Yishun Swimming Complex",
+                        "size":"Olympic",
+                        "opening_hours":"7am to 10pm",
+                        "coach":{
+                            "name":"Vincent Ong",
+                            "certifcation":"Life Saving Level 2"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+
+]

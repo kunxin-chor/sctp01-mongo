@@ -1,0 +1,25 @@
+[
+    {
+        "_id": 45678,
+        "date": "22/12/2021",
+        "venue_id": {
+            "name":"Yishun Swimming Complex",
+            "_id": 1
+        },
+        "coach_id": {
+            "name":"Vincent Ong",
+            "_id": 771
+        },
+        "students": [
+            {
+                "name":"Tan Ah Kow",
+                "_id": 33
+            },
+            {
+                
+                "name":"Tan Ah Xiong",
+                "_id": 35
+            }
+        ]
+    }
+]
