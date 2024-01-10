@@ -1,0 +1,35 @@
+{{#extends "base"}}
+    {{#block "content"}}
+    
+    <h1>Update Food Record: {{foodRecord.foodName}}</h1>
+    <form method="POST">
+        <div>
+            <label>Food Name</label>
+            <input type="text" name="foodName" value="{{foodRecord.foodName}}"/>
+        </div>
+        <div>
+            <label>Calories</label>
+            <input type="text" name="calories" value="{{foodRecord.calories}}"/>
+        </div>
+        <div>
+            <label>Tags</label>
+            <input type="checkbox" name="tags" value="homecooked" {{#inArray foodRecord.tags "homecoocked"}} checked {{/inArray}}/>
+            <label>Home Cooked</label>
+
+            <input type="checkbox" name="tags" value="organic" {{#inArray foodRecord.tags "organic"}} checked {{/inArray}}/>
+            <label>Organic</label>
+
+            <input type="checkbox" name="tags" value="vegan" {{#inArray foodRecord.tags "vegan"}} checked {{/inArray}}/>
+            <label>Vegan</label>
+
+            <input type="checkbox" name="tags" value="unhealthy" {{#inArray foodRecord.tags "unhealthy"}} checked {{/inArray}}/>
+            <label>Unhealthy</label>
+        </div>
+        <input type="submit" value="Add Food"/>
+    </form>
+  
+
+
+    {{/block}}
+{{/extends}}
+
