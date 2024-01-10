@@ -1,6 +1,11 @@
 // require in the MongoDB client
 const MongoClient = require("mongodb").MongoClient;
-const mongoURL = "mongodb+srv://root:rotiprata123@cluster0.cacnq.mongodb.net/?retryWrites=true&w=majority";
+
+// read the variables from the .env file
+// and save it to process.env
+require("dotenv").config();
+
+const mongoURL = process.env.MONGO_URL;
 
 // we are going to use `await` to wait for some
 // asynchronous operation to finish
