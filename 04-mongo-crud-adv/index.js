@@ -1,6 +1,7 @@
 const express = require('express');
 
 const { ObjectId } = require('mongodb');
+const {findFoodByID} = require("./data");
 
 // setup HBS and template inheritance using wax-on
 const hbs = require('hbs');
@@ -37,16 +38,7 @@ const DB_NAME = process.env.DB_NAME;
 
 async function main() {
     const db = await connect(process.env.MONGO_URL, DB_NAME);
-
-    // findOne will return one result instead of an array
-    async function findFoodByID(foodId) {
-        const foodRecord = await db.collection(COLLECTION).findOne({
-            "_id": new ObjectId(foodId)
-        });
-        return foodRecord;
-    }
-    
-
+  
     app.get("/", async function (req, res) {
 
         const {foodName, minCalories, maxCalories} = req.query;
