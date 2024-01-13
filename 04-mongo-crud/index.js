@@ -36,13 +36,60 @@ async function main() {
     const db = await connect(process.env.MONGO_URL, "sctp01_cico");
 
     app.get("/", async function (req, res) {
+
+        const {foodName, minCalories, maxCalories} = req.query;
+
+        let searchCriteria = {};
+
+        let searchByFoodNameOrTags = [];
+
+        if (foodName) {
+            searchByFoodNameOrTags.push({
+                "foodName": {
+                    "$regex": foodName,
+                    "$options":"i"
+                }
+            })
+            searchByFoodNameOrTags.push({
+                "tags": foodName
+            })
+
+            searchCriteria["$or"] = searchByFoodNameOrTags
+        }
+
+        if (minCalories || maxCalories) {
+            searchCriteria.calories = {};
+
+            if (minCalories) {
+                searchCriteria.calories["$gte"] = parseInt(minCalories);
+            }
+            if (maxCalories) {
+                searchCriteria.calories["$lte"] = parseInt(maxCalories);
+            }
+           
+        }
+   
+
+        console.log(searchCriteria);
+
         // We want to retrieve the documents from the collections
         // and convert it to an array of JSON objects
         const foodRecords = await db.collection(COLLECTION)
-            .find()
+            .find(searchCriteria, {
+                'projection':{
+                    'foodName': 1,
+                    'tags': 1,
+                    'calories': 1
+                }
+            })
             .toArray();
         res.render('all-food-records', {
-            'foodRecords': foodRecords
+            'foodRecords': foodRecords,
+            'searchCriteria': {
+                "foodName": foodName,
+                "minCalories":minCalories,
+                "maxCalories":maxCalories
+            }
         })
     })
 
@@ -135,6 +182,114 @@ async function main() {
 
         res.redirect("/");
     })
+
+    app.get("/add-note/:foodid", async function(req,res){
+        
+        // when a line in a try block crashes the program (i.e. raises an exception)
+        try {
+            const foodId = req.params.foodid;
+            const foodRecord = await db.collection(COLLECTION).findOne({
+                "_id": new ObjectId(foodId) 
+            });
+            if (foodRecord) {
+                res.render('add-note', {
+                    'food': foodRecord
+                })
+            } else {
+               // error handling
+                res.status(404);
+                res.send("Food record not found");
+            }
+        } catch (e) {
+            // catching the exception (when there's an error, the program counter
+            // will move in the first line the catch block)
+            res.status(500);
+            res.send("Sorry something went wrong. Please try again later");
+        }
+    
+    });
+
+    app.post("/add-note/:foodid", async function(req,res){
+        const foodId = req.params.foodid;
+        const noteContent = req.body.noteContent;
+        const response = await db.collection(COLLECTION)
+                                .updateOne({
+                                    "_id": new ObjectId(foodId)
+                                }, {
+                                    "$push":{
+                                        "notes": {
+                                            '_id': new ObjectId(),
+                                            'content': noteContent
+                                        }
+                                    }
+                                })
+        res.redirect("/view-food/" + foodId );
+
+    })
+
+    app.get("/view-food/:foodid", async function(req, res){
+        const foodRecord = await db.collection(COLLECTION).findOne({
+            "_id": new ObjectId(req.params.foodid)
+        });
+        res.render('view-food',{
+            'food': foodRecord
+        })
+    });
+
+    app.get("/food/:foodid/delete-note/:noteid", async function(req,res){
+        const {foodid, noteid} = req.params;
+        // const foodid = req.params.foodid;
+        // const noteid = req.params.noteid;
+        
+        await db.collection(COLLECTION).updateOne({
+            "_id": new ObjectId(foodid)
+        },{
+            '$pull': {
+                "notes":{
+                    "_id": new ObjectId(noteid)
+                }
+            }
+        })
+
+        res.redirect('/view-food/' + foodid);
+    })
+
+    app.get('/food/:foodid/edit-note/:noteid', async function(req,res){
+
+        const {foodid, noteid} = req.params;
+        const foodRecord = await db.collection(COLLECTION).findOne({
+          '_id': new ObjectId(foodid)  
+        },{
+            'projection':{
+                'foodName':1,
+                'notes': {
+                    '$elemMatch':{
+                        '_id': new ObjectId(noteid)
+                    }
+                }
+            }
+        });
+        res.render('edit-note',{
+            'foodName': foodRecord.foodName,
+            'note': foodRecord.notes[0]
+        })
+    })
+
+    app.post('/food/:foodid/edit-note/:noteid', async function(req,res){
+
+        const {foodid, noteid} = req.params;  
+        await db.collection(COLLECTION)
+            .updateOne({
+                '_id': new ObjectId(foodid),
+                'notes._id': new ObjectId(noteid)
+            },{
+                '$set':{
+                    'notes.$.content': req.body.noteContent
+                }
+            })
+        
+        res.redirect('/view-food/' + foodid);
+    });  
 
 }
 

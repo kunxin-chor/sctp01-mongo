@@ -15,6 +15,7 @@
     "handlebars-helpers": "^0.10.0",
     "hbs": "^4.2.0",
     "mongodb": "^6.3.0",
+    "nodemon": "^3.0.2",
     "wax-on": "^1.2.2"
   }
 }

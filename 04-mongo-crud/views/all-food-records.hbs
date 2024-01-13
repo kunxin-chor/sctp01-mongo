@@ -2,6 +2,36 @@
 
 {{#block "content"}}
 <h1>All Food Records</h1>
+
+<h2>Search</h2>
+<form method="GET">
+    <div>
+        <label>Food Name:</label>
+        <input type="text" 
+            name="foodName" 
+            class="form-control"
+            value="{{searchCriteria.foodName}}"
+        />
+    </div>
+    <div>
+        <label>Min Calories</label>
+        <input type="number"
+            name="minCalories"
+            class="form-control"
+            value="{{searchCriteria.minCalories}}"
+        />
+    </div>
+        <div>
+        <label>Max Calories</label>
+        <input type="number"
+            name="maxCalories"
+            class="form-control"
+            value="{{searchCriteria.maxCalories}}"
+        />
+    </div>
+    <input type="submit" class="btn btn-primary mt-3"/>
+</form>
+
 <table class="table">
     <thead>
         <tr>
@@ -18,7 +48,8 @@
             <td>{{this.calories}}</td>
             <td>{{this.tags}}</td>
             <td>
-                <a href="update-food/{{this._id}}" class="btn btn-primary">Update</a>
+                <a href="/view-food/{{this._id}}" class="btn btn-secondary">Details</a>
+                <a href="/update-food/{{this._id}}" class="btn btn-primary">Update</a>
                 <a href="/delete-food/{{this._id}}" class="btn btn-danger">Delete</a>
             </td>
         </tr>
