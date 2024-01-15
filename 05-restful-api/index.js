@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors'); // cross origin resources sharing
 const { ObjectId } = require('mongodb');
+const {authenticateToken} = require('./middlewares');
 
 require("dotenv").config();
 
@@ -21,6 +22,7 @@ const { connect } = require("./mongoUtil");
 // it is a global constant
 const COLLECTION = "foodRecords";
 const DB_NAME = process.env.DB_NAME;
+
 
 async function main() {
     const db = await connect(process.env.MONGO_URL, DB_NAME);
@@ -87,7 +89,7 @@ async function main() {
     })
 
     // For processes like C, U and D, NEVER mention the verb inside the URL
-    app.post("/food", async function (req, res) {
+    app.post("/food", authenticateToken, async function (req, res) {
         // anything retrieved is from req.body is a string, not number
         const foodName = req.body.foodName;
         const calories = req.body.calories;
@@ -236,6 +238,9 @@ async function main() {
             results
         })
     });
+
+    // user routes
+    app.use('/users', require('./users'));
 
 }
 
