@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors'); // cross origin resources sharing
 const { ObjectId } = require('mongodb');
+const userRoutes = require("./users");
 
 require("dotenv").config();
 
@@ -15,12 +16,15 @@ app.use(express.json());
 // that we to require from the `mongoUtil.js`
 // that is in the same directory as the current file (i.e, index.js)
 const { connect } = require("./mongoUtil");
+const { authenticateToken } = require('./middlewares');
+
 // alternative long form: const connect = require("./mongoUtil").connect;
 
 // usually in the industry, if the varianle name is in full caps,
 // it is a global constant
 const COLLECTION = "foodRecords";
 const DB_NAME = process.env.DB_NAME;
+
 
 async function main() {
     const db = await connect(process.env.MONGO_URL, DB_NAME);
@@ -34,7 +38,7 @@ async function main() {
     }
 
 
-    app.get("/foods", async function (req, res) {
+    app.get("/foods",  async function (req, res) {
 
         const { foodName, minCalories, maxCalories } = req.query;
 
@@ -87,7 +91,7 @@ async function main() {
     })
 
     // For processes like C, U and D, NEVER mention the verb inside the URL
-    app.post("/food", async function (req, res) {
+    app.post("/food", authenticateToken, async function (req, res) {
         // anything retrieved is from req.body is a string, not number
         const foodName = req.body.foodName;
         const calories = req.body.calories;
@@ -236,6 +240,12 @@ async function main() {
             results
         })
     });
+
+    // register the user routes
+    // if the url sent to Express starts with '/users',
+    // then the remaining framgent is looked for inside
+    // userRoutes
+    app.use('/users', userRoutes);
 
 }
 
