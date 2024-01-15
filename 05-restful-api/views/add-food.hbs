@@ -1,0 +1,35 @@
+{{#extends "base"}}
+    {{#block "content"}}
+    
+    <h1>Add a New Food</h1>
+    <form method="POST">
+        <div>
+            <label>Food Name</label>
+            <input type="text" name="foodName"/>
+        </div>
+        <div>
+            <label>Calories</label>
+            <input type="text" name="calories"/>
+        </div>
+        <div>
+            <label>Tags</label>
+            <input type="checkbox" name="tags" value="homecooked"/>
+            <label>Home Cooked</label>
+
+            <input type="checkbox" name="tags" value="organic"/>
+            <label>Organic</label>
+
+            <input type="checkbox" name="tags" value="vegan"/>
+            <label>Vegan</label>
+
+            <input type="checkbox" name="tags" value="unhealthy"/>
+            <label>Unhealthy</label>
+        </div>
+        <input type="submit" value="Add Food"/>
+    </form>
+  
+
+
+    {{/block}}
+{{/extends}}
+
